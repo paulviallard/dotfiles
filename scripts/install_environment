@@ -8,7 +8,7 @@ ENVIRONMENT=$HOME/.shell
 VIM_ENVIRONMENT=$HOME/.vim
 
 # We install the shell
-rm -i $HOME/.zshrc
+rm -rf $HOME/.zshrc
 echo "source ~/.shell/shell_profile.zsh" > $HOME/.zshrc
 
 # We install the plugins for zsh
@@ -17,12 +17,14 @@ git clone git://github.com/zsh-users/zsh-autosuggestions autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git highlighting
 
 # We install vim
-rm -i $HOME/.vimrc
-ln $ENVIRONMENT/config/vim_profile.vim $HOME/.vimrc
+rm -rf $HOME/.vimrc
+rm -rf $VIM_ENVIRONMENT
 mkdir -p $VIM_ENVIRONMENT/colors
+ln $ENVIRONMENT/config/vim_profile.vim $HOME/.vimrc
 ln $ENVIRONMENT/config/vim_color.vim $VIM_ENVIRONMENT/colors/paulviallard.vim
 
 # We install different configurations
+rm -rf $HOME/.tmux.conf
 ln $ENVIRONMENT/config/tmux.conf $HOME/.tmux.conf
 
 # We install the plugins for vim
