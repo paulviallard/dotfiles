@@ -33,3 +33,6 @@ curl -LSso $VIM_ENVIRONMENT/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 git clone git://github.com/tpope/vim-fugitive.git $VIM_ENVIRONMENT/bundle/vim-fugitive
 git clone https://github.com/scrooloose/nerdtree.git $VIM_ENVIRONMENT/bundle/nerdtree
 git clone https://github.com/scrooloose/nerdcommenter.git $VIM_ENVIRONMENT/bundle/nerdcommenter
+
+# We create a local branch
+cd $ENVIRONMENT; git checkout -b local

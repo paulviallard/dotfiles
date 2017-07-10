@@ -7,6 +7,9 @@
 ENVIRONMENT=$HOME/.shell
 VIM_ENVIRONMENT=$HOME/.vim
 
+# We save the local changes (we assume that we are in the local branch)
+git add -A; git commit -m "feat: local changes"; git checkout master
+
 # We update the plugins for zsh
 cd $ENVIRONMENT/prompt/autosuggestions; git pull
 cd $ENVIRONMENT/prompt/highlighting; git pull
@@ -19,4 +22,7 @@ cd $VIM_ENVIRONMENT/bundle/nerdtree; git pull
 cd $VIM_ENVIRONMENT/bundle/nerdcommenter; git pull
 
 # We update the environment
-cd $ENVIRONMENT; git checkout master; git pull
+cd $ENVIRONMENT; git pull
+
+# We change the branch and we merge
+git checkout local; git merge master
