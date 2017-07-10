@@ -24,3 +24,11 @@ alias la="ls --color=auto -la"
 
 alias ocaml="ledit ocaml"
 
+# LOCAL #
+function _backup() {
+  if [[ $1 == "mac" ]]; then
+    command backup $HOME "" 10 paulviallard 192.168.1.23 /volume1/Backup/Mac;
+  fi
+}
+alias backup="_backup"
+# LOCAL #
