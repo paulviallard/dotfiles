@@ -8,7 +8,7 @@ ENVIRONMENT=$HOME/.shell
 VIM_ENVIRONMENT=$HOME/.vim
 
 # We save the local changes (we assume that we are in the local branch)
-git add -A; git commit -m "feat: local changes"; git checkout master
+cd $ENVIRONMENT; git add -A; git commit -m "feat: local changes"; git checkout master
 
 # We update the plugins for zsh
 cd $ENVIRONMENT/prompt/autosuggestions; git pull
