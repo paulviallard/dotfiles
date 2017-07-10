@@ -19,5 +19,4 @@ cd $VIM_ENVIRONMENT/bundle/nerdtree; git pull
 cd $VIM_ENVIRONMENT/bundle/nerdcommenter; git pull
 
 # We update the environment
-cd $ENVIRONMENT
-git pull
+cd $ENVIRONMENT; git checkout master; git pull
