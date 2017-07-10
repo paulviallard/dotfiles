@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+# Copyright © 2017 Paul Viallard <paul.viallard@gmail.com>
+# This work is free. You can redistribute it and/or modify it under the
+# terms of the Do What The Fuck You Want To Public License, Version 2,
+# as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
+
+ENVIRONMENT=$HOME/.shell
+VIM_ENVIRONMENT=$HOME/.vim
+
+# We update the plugins for zsh
+cd $ENVIRONMENT/prompt/autosuggestions; git pull
+cd $ENVIRONMENT/prompt/highlighting; git pull
+
+# We update the plugins for vim
+rm -f $VIM_ENVIRONMENT/autoload/pathogen.vim
+curl -LSso $VIM_ENVIRONMENT/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+cd $VIM_ENVIRONMENT/bundle/vim-fugitive; git pull
+cd $VIM_ENVIRONMENT/bundle/nerdtree; git pull
+cd $VIM_ENVIRONMENT/bundle/nerdcommenter; git pull
+
+# We update the environment
+cd $ENVIRONMENT
+git pull

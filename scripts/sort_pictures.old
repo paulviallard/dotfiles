@@ -1,0 +1,59 @@
+#!/usr/bin/env perl
+# Copyright © 2017 Paul Viallard <paul.viallard@gmail.com>
+# This work is free. You can redistribute it and/or modify it under the
+# terms of the Do What The Fuck You Want To Public License, Version 2,
+# as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
+
+use strict;
+use warnings;
+
+use File::Copy;
+use File::Path;
+
+my $dossier_source = shift or die("Usage: $0 dossier_source dossier_destination\n");
+my $dossier_destination = shift or die("Usage: $0 dossier_source dossier_destination\n");
+my @mois = qw(01 02 03 04 05 06 07 08 09 10 11 12);
+
+my @liste_source = <$dossier_source/*>;
+
+
+foreach my $source (@liste_source) {
+    if(-f $source) {
+	my $dossier = donner_nom_dossier ($source);
+	creer_dossier ($dossier);
+	deplacer_fichier($source, $dossier);
+    }
+}
+
+sub deplacer_fichier {
+    (my $source, my $dossier) = @_;
+    my $image = $source;
+    $image =~ s/.*\/(.*)$/$1/g;
+    die("Erreur: $dossier_destination/$dossier/$image existe deja\n") if(-f "$dossier_destination/$dossier/$image");
+    move("$source","$dossier_destination/$dossier") or die("Erreur: $dossier_destination/$dossier n'existe pas\n");
+}
+
+sub creer_dossier {
+    my $chemin = shift @_;
+    (my $dossier_parent, my $dossier) = split(/\//,$chemin);
+    if(! -d "$dossier_destination") {
+	mkdir "$dossier_destination" or die("Erreur: echec dans la creation de $dossier_destination\n");
+    }
+    
+    if(! -d "$dossier_destination/$dossier_parent") {
+	mkdir "$dossier_destination/$dossier_parent" or die("Erreur: echec dans la creation de $dossier_destination/$dossier_parent\n");
+	mkdir "$dossier_destination/$dossier_parent/$dossier" or die("Erreur: echec dans la creation de $dossier_destination/$dossier_parent/$dossier\n");
+    }
+    if(! -d "$dossier_destination/$dossier_parent/$dossier") {
+	mkdir "$dossier_destination/$dossier_parent/$dossier" or die("Erreur: echec dans la creation de $dossier_destination/$dossier_parent/$dossier\n");
+    }
+}
+
+sub donner_nom_dossier {
+    my $fichier = shift @_;
+    my $modification = (stat $fichier)[9];
+    (undef,undef,undef,my $jour,my $index_mois,my $annee,undef,undef,undef) = localtime($modification);
+    $jour =~ s/^([1-9])$/0$1/g;
+    $annee += 1900;
+    return "$annee/$annee-$mois[$index_mois]-$jour";
+}

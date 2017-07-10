@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+# Copyright © 2017 Paul Viallard <paul.viallard@gmail.com>
+# This work is free. You can redistribute it and/or modify it under the
+# terms of the Do What The Fuck You Want To Public License, Version 2,
+# as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
+
+ENVIRONMENT=$HOME/.shell
+VIM_ENVIRONMENT=$HOME/.vim
+
+# We install the shell
+rm -i $HOME/.zshrc
+echo "source ~/.shell/shell_profile.zsh" > $HOME/.zshrc
+
+# We install the plugins for zsh
+cd $ENVIRONMENT/prompt/
+git clone git://github.com/zsh-users/zsh-autosuggestions autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git highlighting
+
+# We install vim
+rm -i $HOME/.vimrc
+ln $ENVIRONMENT/config/vim_profile.vim $HOME/.vimrc
+mkdir -p $VIM_ENVIRONMENT/colors
+ln $ENVIRONMENT/config/vim_color.vim $VIM_ENVIRONMENT/colors/paulviallard.vim
+
+# We install different configurations
+ln $ENVIRONMENT/config/tmux.conf $HOME/.tmux.conf
+
+# We install the plugins for vim
+mkdir -p $VIM_ENVIRONMENT/autoload $VIM_ENVIRONMENT/bundle && \
+curl -LSso $VIM_ENVIRONMENT/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+git clone git://github.com/tpope/vim-fugitive.git $VIM_ENVIRONMENT/bundle/vim-fugitive
+git clone https://github.com/scrooloose/nerdtree.git $VIM_ENVIRONMENT/bundle/nerdtree
+git clone https://github.com/scrooloose/nerdcommenter.git $VIM_ENVIRONMENT/bundle/nerdcommenter
