@@ -36,3 +36,4 @@ git clone https://github.com/scrooloose/nerdcommenter.git $VIM_ENVIRONMENT/bundl
 
 # We create a local branch
 cd $ENVIRONMENT; git checkout -b local
+source $HOME/.zshrc

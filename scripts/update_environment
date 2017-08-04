@@ -26,3 +26,4 @@ cd $ENVIRONMENT; git pull
 
 # We change the branch and we merge
 git checkout local; git merge master
+source $HOME/.zshrc
