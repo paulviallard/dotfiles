@@ -8,6 +8,10 @@
 source ~/.shell/prompt/highlighting/zsh-syntax-highlighting.zsh
 source  ~/.shell/prompt/autosuggestions/zsh-autosuggestions.zsh
 
+# We set the shell history
+export HISTSIZE=3000
+export HISTFILE="$HOME/.zsh_history"
+
 # We set the style of the autosuggestion
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=15
 
