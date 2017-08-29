@@ -28,6 +28,8 @@ alias ocaml="ledit ocaml"
 function _backup() {
   if [[ $1 == "mac" ]]; then
     command backup $HOME "" 10 paulviallard 192.168.1.23 /volume1/Backup/Mac;
+  elif [[ $1 == "passport" ]]; then
+    command backup /Volumes/My\ Passport "" 10 paulviallard 192.168.1.23 /volume1/Backup/Passport;
   fi
 }
 alias backup="_backup"
