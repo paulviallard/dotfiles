@@ -109,6 +109,12 @@ inoremap <C-t> <ESC>:call NERDComment(0, 'toggle')<CR>
 nnoremap <C-t> :call NERDComment(1, 'toggle')<CR>
 vnoremap <C-t> :call NERDComment(0, 'toggle')<CR>
 
+" Syntastic
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 " Statusbar
 if has("statusline")
   set laststatus=2
