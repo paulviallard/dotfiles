@@ -20,8 +20,8 @@ curl -LSso $VIM_ENVIRONMENT/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 cd $VIM_ENVIRONMENT/bundle/vim-fugitive; git pull
 cd $VIM_ENVIRONMENT/bundle/nerdtree; git pull
 cd $VIM_ENVIRONMENT/bundle/nerdcommenter; git pull
-cd $VIM_ENVIRONMENT/bundle/syntastic; git pull
 cd $VIM_ENVIRONMENT/bundle/vim-latex; git pull
+cd $VIM_ENVIRONMENT/bundle/Nvim-R; git pull
 
 # We update the environment
 cd $ENVIRONMENT; git pull
