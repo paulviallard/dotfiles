@@ -6,6 +6,7 @@
 
 ENVIRONMENT=$HOME/.shell
 VIM_ENVIRONMENT=$HOME/.vim
+NEOVIM_ENVIRONMENT=$HOME/.config/nvim
 
 # We install the shell
 rm -rf $HOME/.zshrc
@@ -16,16 +17,16 @@ cd $ENVIRONMENT/prompt/
 git clone git://github.com/zsh-users/zsh-autosuggestions autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git highlighting
 
+# We install different configurations
+rm -rf $HOME/.tmux.conf
+ln $ENVIRONMENT/config/tmux.conf $HOME/.tmux.conf
+
 # We install vim
 rm -rf $HOME/.vimrc
 rm -rf $VIM_ENVIRONMENT
 mkdir -p $VIM_ENVIRONMENT/colors
 ln $ENVIRONMENT/config/vim_profile.vim $HOME/.vimrc
 ln $ENVIRONMENT/config/vim_color.vim $VIM_ENVIRONMENT/colors/paulviallard.vim
-
-# We install different configurations
-rm -rf $HOME/.tmux.conf
-ln $ENVIRONMENT/config/tmux.conf $HOME/.tmux.conf
 
 # We install the plugins for vim
 mkdir -p $VIM_ENVIRONMENT/autoload $VIM_ENVIRONMENT/bundle && \
@@ -34,6 +35,15 @@ git clone git://github.com/tpope/vim-fugitive.git $VIM_ENVIRONMENT/bundle/vim-fu
 git clone https://github.com/scrooloose/nerdtree.git $VIM_ENVIRONMENT/bundle/nerdtree
 git clone https://github.com/scrooloose/nerdcommenter.git $VIM_ENVIRONMENT/bundle/nerdcommenter
 git clone --depth=1 https://github.com/vim-syntastic/syntastic.git $VIM_ENVIRONMENT/bundle/syntastic
+git clone https://github.com/vim-latex/vim-latex.git  $VIM_ENVIRONMENT/bundle/vim-latex
+git clone https://github.com/jalvesaq/Nvim-R.git $VIM_ENVIRONMENT/bundle/Nvim-R
+
+# We install neovim
+mkdir -p $NEOVIM_ENVIRONMENT
+ln $ENVIRONMENT/config/vim_profile.vim $NEOVIM_ENVIRONMENT/init.vim
+ln -s $VIM_ENVIRONMENT/colors $NEOVIM_ENVIRONMENT/colors
+ln -s $VIM_ENVIRONMENT/autoload $NEOVIM_ENVIRONMENT/autoload
+ln -s $VIM_ENVIRONMENT/bundle $NEOVIM_ENVIRONMENT/bundle
 
 # We create a local branch
 cd $ENVIRONMENT; git checkout -b local
