@@ -116,24 +116,29 @@ inoremap <C-t> <ESC>:call NERDComment(0, 'toggle')<CR>
 nnoremap <C-t> :call NERDComment(1, 'toggle')<CR>
 vnoremap <C-t> :call NERDComment(0, 'toggle')<CR>
 
-" Syntastic
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
 " Nvim-R
-nnoremap <C-r> :call SendLineToR("stay")<CR><Down> 
-inoremap <C-r> <Esc>:call SendLineToR("stay")<CR><Down><Home>i
-vnoremap <C-r> :call SendSelectionToR("echo", "stay")<CR><Esc><Down>
-autocmd VimEnter * call ManageNvimR()
-function ManageNvimR()
+autocmd VimEnter * call ManageNvimREnter()
+function ManageNvimREnter()
   if &filetype == "r"
+    nnoremap <C-r> :call SendLineToR("stay")<CR><Down> 
+    inoremap <C-r> <Esc>:call SendLineToR("stay")<CR><Down><Home>i
+    vnoremap <C-r> :call SendSelectionToR("echo", "stay")<CR><Esc><Down>
     command RStart let oldft=&ft | set ft=r | exe 'set ft='.oldft | let b:IsInRCode = function("DefaultIsInRCode") | normal <LocalLeader>rf
     :RStart
   endif 
 endfunction
 
+" Vim-Latex
+let g:Tex_DefaultTargetFormat = 'pdf'
+let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode $*'
+autocmd VimEnter * call ManageVimLatexEnter()
+function ManageVimLatexEnter()
+  if &filetype == "tex"
+    nnoremap <C-r> :silent! call Tex_RunLaTeX()<CR> 
+    inoremap <C-r> <Esc>:silent! call Tex_RunLaTeX()<CR><Home>i
+    vnoremap <C-r> <Esc>:silent! call Tex_RunLaTeX()<CR>
+  endif
+endfunction
 
 " Statusbar
 if has("statusline")
