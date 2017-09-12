@@ -12,7 +12,9 @@ syntax on
 
 set langmenu=none
 set mouse=a
-set ttymouse=xterm2
+if !has('nvim')
+  set ttymouse=xterm2
+endif
 set ruler
 set nu
 set noswapfile
@@ -68,9 +70,14 @@ endif
 colorscheme paulviallard
 
 " NERDTree 
-autocmd VimEnter * NERDTree
+autocmd VimEnter * call ManageNERDTreeEnter()
 autocmd WinEnter * call ManageNERDTree()
 let g:NERDTreeWinPos = "left"
+
+function ManageNERDTreeEnter()
+  NERDTree
+  :wincmd l
+endfunction
 
 function ManageNERDTree()
   if winnr('$') == 1 && @% == t:NERDTreeBufName 
@@ -114,6 +121,19 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+" Nvim-R
+nnoremap <C-r> :call SendLineToR("stay")<CR><Down> 
+inoremap <C-r> <Esc>:call SendLineToR("stay")<CR><Down><Home>i
+vnoremap <C-r> :call SendSelectionToR("echo", "stay")<CR><Esc><Down>
+autocmd VimEnter * call ManageNvimR()
+function ManageNvimR()
+  if &filetype == "r"
+    command RStart let oldft=&ft | set ft=r | exe 'set ft='.oldft | let b:IsInRCode = function("DefaultIsInRCode") | normal <LocalLeader>rf
+    :RStart
+  endif 
+endfunction
+
 
 " Statusbar
 if has("statusline")
