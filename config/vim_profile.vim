@@ -129,6 +129,7 @@ function ManageNvimREnter()
 endfunction
 
 " Vim-Latex
+let g:Imap_UsePlaceHolders = 0
 let g:Tex_DefaultTargetFormat = 'pdf'
 let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode $*'
 autocmd VimEnter * call ManageVimLatexEnter()
