@@ -82,7 +82,6 @@ nnoremap <S-DOWN> <C-w>J
 vnoremap <S-DOWN> <C-w>J
 inoremap <S-DOWN> <C-w>J
 
-
 " Clipboard
 set clipboard=unnamed
 if has('unnamedplus')
