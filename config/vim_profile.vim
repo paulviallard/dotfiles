@@ -60,6 +60,29 @@ vnoremap <C-x> x
 vnoremap <BS> x
 nnoremap <BS> x
 
+" Cursor move
+nnoremap <S-TAB> <C-w>w
+vnoremap <S-TAB> <C-w>w
+inoremap <S-TAB> <C-w>w
+
+" Window move
+nnoremap <S-LEFT> <C-w>H
+vnoremap <S-LEFT> <C-w>H
+inoremap <S-LEFT> <C-w>H
+
+nnoremap <S-RIGHT> <C-w>L
+vnoremap <S-RIGHT> <C-w>L
+inoremap <S-RIGHT> <C-w>L
+
+nnoremap <S-UP> <C-w>K
+vnoremap <S-UP> <C-w>K
+inoremap <S-UP> <C-w>K
+
+nnoremap <S-DOWN> <C-w>J
+vnoremap <S-DOWN> <C-w>J
+inoremap <S-DOWN> <C-w>J
+
+
 " Clipboard
 set clipboard=unnamed
 if has('unnamedplus')
