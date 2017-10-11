@@ -10,6 +10,9 @@ execute pathogen#helptags()
 filetype plugin indent on
 syntax on
 
+" Completion
+set omnifunc=syntaxcomplete#Complete
+
 set langmenu=none
 set mouse=a
 if !has('nvim')
@@ -31,6 +34,9 @@ set backspace=indent,eol,start
 set smartindent
 set autoindent 
 
+" Split rules
+set splitbelow
+set splitright
 
 " Copy/Paste/Undo
 " Undo
@@ -81,6 +87,14 @@ inoremap <S-UP> <C-w>K
 nnoremap <S-DOWN> <C-w>J
 vnoremap <S-DOWN> <C-w>J
 inoremap <S-DOWN> <C-w>J
+
+" Completion
+if !has("gui_running")
+  inoremap <C-@> <C-x><C-o>
+else
+  inoremap <C-Space> <C-x><C-o>
+endif
+autocmd CompleteDone * pclose
 
 " Clipboard
 set clipboard=unnamed
@@ -139,14 +153,15 @@ nnoremap <C-t> :call NERDComment(1, 'toggle')<CR>
 vnoremap <C-t> :call NERDComment(0, 'toggle')<CR>
 
 " Nvim-R
+let R_in_buffer = 0
 autocmd VimEnter * call ManageNvimREnter()
 function ManageNvimREnter()
   if &filetype == "r"
-    nnoremap <C-r> :call SendLineToR("stay")<CR><Down> 
-    inoremap <C-r> <Esc>:call SendLineToR("stay")<CR><Down><Home>i
-    vnoremap <C-r> :call SendSelectionToR("echo", "stay")<CR><Esc><Down>
+    vmap <C-r> <Plug>RDSendSelection
+    nmap <C-r> <Plug>RDSendLine
     command RStart let oldft=&ft | set ft=r | exe 'set ft='.oldft | let b:IsInRCode = function("DefaultIsInRCode") | normal <LocalLeader>rf
     :RStart
+    call RObjBrowser() 
   endif 
 endfunction
 
