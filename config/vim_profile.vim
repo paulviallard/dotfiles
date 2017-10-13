@@ -167,8 +167,10 @@ endfunction
 
 " Vim-Latex
 let g:Imap_UsePlaceHolders = 0
+let g:Tex_GotoError=0
+let g:Tex_ShowErrorContext = 0
 let g:Tex_DefaultTargetFormat = 'pdf'
-let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode $*'
+let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode -file-line-error-style $*'
 autocmd VimEnter * call ManageVimLatexEnter()
 function ManageVimLatexEnter()
   if &filetype == "tex"
