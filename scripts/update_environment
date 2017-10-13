@@ -6,6 +6,7 @@
 
 ENVIRONMENT=$HOME/.shell
 VIM_ENVIRONMENT=$HOME/.vim
+NEOVIM_ENVIRONMENT=$HOME/.config/nvim
 
 # We save the local changes (we assume that we are in the local branch)
 cd $ENVIRONMENT; git add -A; git commit -m "feat: local changes"; git checkout master
@@ -22,10 +23,18 @@ cd $VIM_ENVIRONMENT/bundle/nerdtree; git pull
 cd $VIM_ENVIRONMENT/bundle/nerdcommenter; git pull
 cd $VIM_ENVIRONMENT/bundle/vim-latex; git pull
 cd $VIM_ENVIRONMENT/bundle/Nvim-R; git pull
+cd $VIM_ENVIRONMENT/bundle/python-mode; git pull
 
 # We update the environment
 cd $ENVIRONMENT; git pull
 
 # We change the branch and we merge
 git checkout local; git merge master
+
+# We recreate the hard links
+ln $ENVIRONMENT/config/vim_profile.vim $HOME/.vimrc
+ln $ENVIRONMENT/config/vim_color.vim $VIM_ENVIRONMENT/colors/paulviallard.vim
+ln $ENVIRONMENT/config/vim_profile.vim $NEOVIM_ENVIRONMENT/init.vim
+
+# We source the new configuraiton
 source $HOME/.zshrc
