@@ -32,9 +32,9 @@ cd $ENVIRONMENT; git pull
 git checkout local; git merge master
 
 # We recreate the hard links
-ln $ENVIRONMENT/config/vim_profile.vim $HOME/.vimrc
-ln $ENVIRONMENT/config/vim_color.vim $VIM_ENVIRONMENT/colors/paulviallard.vim
-ln $ENVIRONMENT/config/vim_profile.vim $NEOVIM_ENVIRONMENT/init.vim
+rm $HOME/.vimrc; ln $ENVIRONMENT/config/vim_profile.vim $HOME/.vimrc
+$VIM_ENVIRONMENT/colors/paulviallard.vim; ln $ENVIRONMENT/config/vim_color.vim $VIM_ENVIRONMENT/colors/paulviallard.vim
+$NEOVIM_ENVIRONMENT/init.vim; ln $ENVIRONMENT/config/vim_profile.vim $NEOVIM_ENVIRONMENT/init.vim
 
 # We source the new configuraiton
 source $HOME/.zshrc
