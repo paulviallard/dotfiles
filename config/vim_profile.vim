@@ -159,6 +159,7 @@ function ManageNvimREnter()
   if &filetype == "r"
     vmap <C-r> <Plug>RDSendSelection
     nmap <C-r> <Plug>RDSendLine
+    imap <M-SPACE> <C-X><C-A>
     command RStart let oldft=&ft | set ft=r | exe 'set ft='.oldft | let b:IsInRCode = function("DefaultIsInRCode") | normal <LocalLeader>rf
     :RStart
     call RObjBrowser() 
