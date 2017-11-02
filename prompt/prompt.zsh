@@ -16,10 +16,15 @@ function print_prompt() {
     RPROMPT="";
   fi 
 
-  # We modify the prompt in order to respect the size defined 
-  size=$(($(tput cols)/2-${#p}));
+  
+  # We adapt the prompt in order to respect the size defined
+  size_prompt=$(echo $PROMPT | perl -pe "s/%\{|%\}|\e[^mGKH]*[mGKH]|//g")
+  size_rprompt=$(echo $RPROMPT | perl -pe "s/%\{|%\}|\e[^mGKH]*[mGKH]|//g")
+  size_prompt=${#size_prompt}  
+  size_rprompt=${#size_rprompt}
+
+  size=$(($(tput cols)/2-$size_prompt-$size_rprompt));
   PROMPT="$PROMPT $(~/.shell/prompt/directory.pl $size)>%{$(tput sgr0)%} ";
 
 }
-
 precmd() { eval print_prompt }
