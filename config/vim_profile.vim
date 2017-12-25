@@ -153,7 +153,6 @@ nnoremap <C-t> :call NERDComment(1, 'toggle')<CR>
 vnoremap <C-t> :call NERDComment(0, 'toggle')<CR>
 
 " Nvim-R
-let R_in_buffer = 0
 autocmd VimEnter * call ManageNvimREnter()
 function ManageNvimREnter()
   if &filetype == "r"
