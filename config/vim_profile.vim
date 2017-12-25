@@ -11,7 +11,9 @@ filetype plugin indent on
 syntax on
 
 " Completion
+set complete=.,t
 set omnifunc=syntaxcomplete#Complete
+" set completeopt=menuone,longest,preview
 
 set langmenu=none
 set mouse=a
@@ -89,12 +91,12 @@ vnoremap <S-DOWN> <C-w>J
 inoremap <S-DOWN> <C-w>J
 
 " Completion
-if !has("gui_running")
-  inoremap <C-@> <C-x><C-o>
-else
-  inoremap <C-Space> <C-x><C-o>
-endif
-autocmd CompleteDone * pclose
+" if !has("gui_running")
+"   inoremap <C-@> <C-x><C-o>
+" else
+"   inoremap <C-Space> <C-x><C-o>
+" endif
+" autocmd CompleteDone * pclose
 
 " Clipboard
 set clipboard=unnamed
@@ -151,6 +153,13 @@ let g:NERDTrimTrailingWhitespace = 1
 inoremap <C-t> <ESC>:call NERDComment(0, 'toggle')<CR>
 nnoremap <C-t> :call NERDComment(1, 'toggle')<CR>
 vnoremap <C-t> :call NERDComment(0, 'toggle')<CR>
+
+" SuperTab
+let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
+let g:SuperTabContextDiscoverDiscovery = ['&omnifunc:<c-x><c-o>', '&completefunc:<c-x><c-u>']
+autocmd FileType * if &omnifunc != '' | call SuperTabChain(&omnifunc, "<c-p>") | endif
 
 " Nvim-R
 let R_in_buffer = 0
