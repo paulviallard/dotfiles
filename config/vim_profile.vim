@@ -194,15 +194,15 @@ function ManageVimLatexEnter()
 endfunction
 
 " python-mode
-if has("python3")
-  let g:pymode_python = 'python3'
-endif
-let g:pymode_run = 1
-let g:pymode_run_bind = '<C-r>'
-let g:pymode_doc = 1
-let g:pymode_doc_bind = '<C-d>'
-let g:pymode_options_colorcolumn = 0
-let g:pymode_folding = 0
+" if has("python3")
+  " let g:pymode_python = 'python3'
+" endif
+" let g:pymode_run = 1
+" let g:pymode_run_bind = '<C-r>'
+" let g:pymode_doc = 1
+" let g:pymode_doc_bind = '<C-d>'
+" let g:pymode_options_colorcolumn = 0
+" let g:pymode_folding = 0
 
 " Statusbar
 if has("statusline")
