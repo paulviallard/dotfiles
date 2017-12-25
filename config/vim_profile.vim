@@ -91,12 +91,9 @@ vnoremap <S-DOWN> <C-w>J
 inoremap <S-DOWN> <C-w>J
 
 " Completion
-" if !has("gui_running")
-"   inoremap <C-@> <C-x><C-o>
-" else
-"   inoremap <C-Space> <C-x><C-o>
-" endif
-" autocmd CompleteDone * pclose
+autocmd CompleteDone * pclose
+set complete=.,t
+set omnifunc=syntaxcomplete#Complete
 
 " Clipboard
 set clipboard=unnamed
@@ -162,7 +159,6 @@ let g:SuperTabContextDiscoverDiscovery = ['&omnifunc:<c-x><c-o>', '&completefunc
 autocmd FileType * if &omnifunc != '' | call SuperTabChain(&omnifunc, "<c-p>") | endif
 
 " Nvim-R
-let R_in_buffer = 0
 autocmd VimEnter * call ManageNvimREnter()
 function ManageNvimREnter()
   if &filetype == "r"
@@ -192,17 +188,6 @@ function ManageVimLatexEnter()
     vnoremap <C-r> <Esc>:silent! call Tex_RunLaTeX()<CR>
   endif
 endfunction
-
-" python-mode
-" if has("python3")
-  " let g:pymode_python = 'python3'
-" endif
-" let g:pymode_run = 1
-" let g:pymode_run_bind = '<C-r>'
-" let g:pymode_doc = 1
-" let g:pymode_doc_bind = '<C-d>'
-" let g:pymode_options_colorcolumn = 0
-" let g:pymode_folding = 0
 
 " Statusbar
 if has("statusline")

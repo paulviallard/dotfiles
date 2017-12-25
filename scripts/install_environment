@@ -36,7 +36,6 @@ git clone https://github.com/scrooloose/nerdtree.git $VIM_ENVIRONMENT/bundle/ner
 git clone https://github.com/scrooloose/nerdcommenter.git $VIM_ENVIRONMENT/bundle/nerdcommenter
 git clone https://github.com/vim-latex/vim-latex.git  $VIM_ENVIRONMENT/bundle/vim-latex
 git clone https://github.com/jalvesaq/Nvim-R.git $VIM_ENVIRONMENT/bundle/Nvim-R
-git clone https://github.com/python-mode/python-mode.git $VIM_ENVIRONMENT/bundle/python-mode
 git clone https://github.com/ervandew/supertab.git $VIM_ENVIRONMENT/bundle/supertab
 
 # We install neovim
