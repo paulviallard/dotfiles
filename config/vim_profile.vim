@@ -10,9 +10,6 @@ execute pathogen#helptags()
 filetype plugin indent on
 syntax on
 
-" Completion
-set omnifunc=syntaxcomplete#Complete
-
 set langmenu=none
 set mouse=a
 if !has('nvim')
@@ -169,6 +166,18 @@ function ManageNvimREnter()
   endif 
 endfunction
 
+" python-mode
+if has("python3")
+  let g:pymode_python = 'python3'
+endif
+let g:pymode_rope_lookup_project = 0
+let g:pymode_run = 1
+let g:pymode_run_bind = '<C-r>'
+let g:pymode_doc = 1
+let g:pymode_doc_bind = '<C-d>'
+let g:pymode_options_colorcolumn = 0
+let g:pymode_folding = 0
+
 " Vim-Latex
 let g:Tex_FoldedSections = ""
 let g:Tex_FoldedEnvironments = ""
@@ -196,3 +205,4 @@ if has("statusline")
   set statusline +=\ \ 
   set statusline +=%y%m%r%{fugitive#statusline()}
 endif
+
