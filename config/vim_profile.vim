@@ -205,3 +205,4 @@ if has("statusline")
   set statusline +=\ \ 
   set statusline +=%y%m%r%{fugitive#statusline()}
 endif
+
