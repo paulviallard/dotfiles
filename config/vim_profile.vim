@@ -154,6 +154,7 @@ let g:SuperTabContextDiscoverDiscovery = ['&omnifunc:<c-x><c-o>', '&completefunc
 autocmd FileType * if &omnifunc != '' | call SuperTabChain(&omnifunc, "<c-p>") | endif
 
 " Nvim-R
+let R_assign = 0
 autocmd VimEnter * call ManageNvimREnter()
 function ManageNvimREnter()
   if &filetype == "r"
