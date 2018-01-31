@@ -155,6 +155,7 @@ autocmd FileType * if &omnifunc != '' | call SuperTabChain(&omnifunc, "<c-p>") |
 
 " Nvim-R
 let R_assign = 0
+let R_in_buffer = 0
 autocmd VimEnter * call ManageNvimREnter()
 function ManageNvimREnter()
   if &filetype == "r"
