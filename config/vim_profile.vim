@@ -197,6 +197,18 @@ let g:pymode_doc_bind = '<C-d>'
 let g:pymode_options_colorcolumn = 0
 let g:pymode_folding = 0
 
+" vim-markdown
+let g:vim_markdown_folding_disabled = 1 
+autocmd VimEnter * call ManageVimMarkdownEnter()
+function ManageVimMarkdownEnter()
+  if &filetype == "markdown"
+    nnoremap <C-r> :! $HOME/.vim/bundle/vim-markdown/markdown.pl % > %:r.html<CR> 
+    inoremap <C-r> <Esc>:! $HOME/.vim/bundle/vim-markdown/markdown.pl % > %:r.html<CR><Home>i
+    vnoremap <C-r> <Esc>:! $HOME/.vim/bundle/vim-markdown/markdown.pl % > %:r.html<CR>
+  endif
+endfunction
+
+
 " Statusbar
 if has("statusline")
   set laststatus=2
