@@ -198,6 +198,7 @@ let g:pymode_options_colorcolumn = 0
 let g:pymode_folding = 0
 
 " vim-markdown
+let g:vim_markdown_folding_disabled = 1 
 autocmd VimEnter * call ManageVimMarkdownEnter()
 function ManageVimMarkdownEnter()
   if &filetype == "markdown"
