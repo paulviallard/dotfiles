@@ -5,6 +5,7 @@
 # as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 
 export EDITOR="vim"
+export MANPAGER="vim -M +MANPAGER -"
 
 PATH=.:~/.shell/scripts/
 
