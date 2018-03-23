@@ -105,8 +105,10 @@ autocmd WinEnter * call ManageNERDTree()
 let g:NERDTreeWinPos = "left"
 
 function ManageNERDTreeEnter()
-  NERDTree
-  :wincmd l
+  if &filetype != "man"
+    NERDTree
+    :wincmd l
+  endif
 endfunction
 
 function ManageNERDTree()
@@ -218,4 +220,3 @@ if has("statusline")
   set statusline +=\ \ 
   set statusline +=%y%m%r%{fugitive#statusline()}
 endif
-
