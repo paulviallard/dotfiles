@@ -41,6 +41,7 @@ git clone --recursive https://github.com/python-mode/python-mode $VIM_ENVIRONMEN
 git clone https://github.com/ervandew/supertab.git $VIM_ENVIRONMENT/bundle/supertab
 git clone https://github.com/plasticboy/vim-markdown.git $VIM_ENVIRONMENT/bundle/vim-markdown
 wget http://daringfireball.net/projects/downloads/Markdown_1.0.1.zip -O $VIM_ENVIRONMENT/bundle/vim-markdown/Markdown_1.0.1.zip; unzip $VIM_ENVIRONMENT/bundle/vim-markdown/Markdown_1.0.1.zip -d $VIM_ENVIRONMENT/bundle/vim-markdown/; mv $VIM_ENVIRONMENT/bundle/vim-markdown/Markdown_1.0.1/Markdown.pl $VIM_ENVIRONMENT/bundle/vim-markdown/markdown.pl; rm -rf $VIM_ENVIRONMENT/bundle/vim-markdown/Markdown_1.0.1/; rm -rf $VIM_ENVIRONMENT/bundle/vim-markdown/Markdown_1.0.1.zip
+git clone https://github.com/leafgarland/typescript-vim.git $VIM_ENVIRONMENT/bundle/typescript-vim
 
 # We install neovim
 mkdir -p $NEOVIM_ENVIRONMENT
