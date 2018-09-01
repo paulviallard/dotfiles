@@ -6,7 +6,6 @@
 
 ENVIRONMENT=$HOME/.shell
 VIM_ENVIRONMENT=$HOME/.vim
-NEOVIM_ENVIRONMENT=$HOME/.config/nvim
 
 # We install the shell
 rm -rf $HOME/.zshrc
