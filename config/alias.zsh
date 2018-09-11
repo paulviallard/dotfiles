@@ -21,6 +21,3 @@ alias find="_find"
 alias grep="grep --color=auto"
 alias ls="ls --color=auto"
 alias la="ls --color=auto -la"
-
-alias ocaml="ledit ocaml"
-
