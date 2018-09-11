@@ -22,8 +22,6 @@ alias grep="grep --color=auto"
 alias ls="ls --color=auto"
 alias la="ls --color=auto -la"
 
-alias ocaml="ledit ocaml"
-
 # LOCAL #
 function _backup() {
   if [[ $1 == "mac" ]]; then
