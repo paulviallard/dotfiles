@@ -6,7 +6,6 @@
 
 ENVIRONMENT=$HOME/.shell
 VIM_ENVIRONMENT=$HOME/.vim
-NEOVIM_ENVIRONMENT=$HOME/.config/nvim
 
 # We save the local changes (we assume that we are in the local branch)
 cd $ENVIRONMENT; git add -A; git commit -m "feat: local changes"; git checkout master

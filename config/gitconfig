@@ -1,0 +1,10 @@
+[user]
+  name = Paul Viallard
+  email = paul.viallard@gmail.com
+[core]
+  pager = vim -M +MANPAGER -
+  editor = vim
+[merge]
+  tool = vimdiff
+[diff]
+  tool = vimdiff
