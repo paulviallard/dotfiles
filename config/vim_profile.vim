@@ -115,7 +115,7 @@ function ManageNERDTree()
   if winnr('$') == 1 && @% == t:NERDTreeBufName 
     quit
   endif
-  if bufwinnr(t:NERDTreeBufName) == -1
+  if (!exists("t:NERDTreeBufName")) || bufwinnr(t:NERDTreeBufName) == -1
     NERDTree
   endif 
 endfunction
