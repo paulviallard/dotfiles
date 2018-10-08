@@ -11,9 +11,9 @@ PATH=.:~/.shell/scripts/
 
 # LOCAL #
 PATH=$PATH:/usr/local/opt/texinfo/bin
-PATH=$PATH:/usr/local/opt/python/libexec/bin
+PATH=$PATH:/usr/local/anaconda3/bin
 PATH=$PATH:/usr/local/opt/php56/bin:/usr/local/opt/gcc/bin:/usr/local/opt/coreutils/libexec/gnubin
-PATH=$PATH:/usr/local/texlive/2017/bin/x86_64-darwin:/Applications/SageMath-7.3.app:/Applications/Utilities/XQuartz.app/Contents/MacOS:/Applications/Dia.app/Contents/Resources/bin:/usr/local/Cellar/vim/8.0.0604/bin:/Applications/MacVim.app/Contents/bin
+PATH=$PATH:/usr/local/texlive/2017/bin/x86_64-darwin:/Applications/Utilities/XQuartz.app/Contents/MacOS:/Applications/Dia.app/Contents/Resources/bin:/usr/local/Cellar/vim/8.0.0604/bin:/Applications/MacVim.app/Contents/bin
 # LOCAL #
 
 PATH=$PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
