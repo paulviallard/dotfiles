@@ -191,8 +191,10 @@ endfunction
 " python-mode
 if has("python3")
   let g:pymode_python = 'python3'
+  silent! python3 1
 endif
 let g:pymode_run = 1
+let g:pymode_lint_checkers = ['pylint', 'pep8', 'mccabe', 'pyflakes']
 let g:pymode_run_bind = '<C-r>'
 let g:pymode_doc = 1
 let g:pymode_doc_bind = '<C-d>'
