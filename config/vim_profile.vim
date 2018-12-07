@@ -191,7 +191,10 @@ endfunction
 " python-mode
 if has("python3")
   let g:pymode_python = 'python3'
-  silent! python3 1
+  "silent! python3 1
+  command! -nargs=1 Py py3 <args>
+  set pythonthreedll=/usr/local/Frameworks/Python.framework/Versions/3.7/Python
+  set pythonthreehome=/usr/local/Frameworks/Python.framework/Versions/3.7
 endif
 let g:pymode_run = 1
 let g:pymode_lint_checkers = ['pylint', 'pep8', 'mccabe', 'pyflakes']
