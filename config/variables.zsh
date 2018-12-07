@@ -10,13 +10,17 @@ export MANPAGER="vim -M +MANPAGER -"
 PATH=.:~/.shell/scripts/
 
 # LOCAL #
-PATH=$PATH:/usr/local/opt/texinfo/bin
-PATH=$PATH:/usr/local/anaconda3/bin
-PATH=$PATH:/usr/local/opt/php56/bin:/usr/local/opt/gcc/bin:/usr/local/opt/coreutils/libexec/gnubin
-PATH=$PATH:/usr/local/texlive/2017/bin/x86_64-darwin:/Applications/Utilities/XQuartz.app/Contents/MacOS:/Applications/Dia.app/Contents/Resources/bin:/usr/local/Cellar/vim/8.0.0604/bin:/Applications/MacVim.app/Contents/bin
+PATH=$PATH:/usr/local/opt/gcc/bin:/usr/local/opt/coreutils/libexec/gnubin:/usr/local/anaconda3/bin
+PATH=$PATH:/usr/local/Cellar/vim/8.0.0604/bin:/Applications/MacVim.app/Contents/bin
 # LOCAL #
 
 PATH=$PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
+
+# LOCAL #
+PATH=$PATH:/usr/local/opt/php56/bin:/usr/local/texlive/2017/bin/x86_64-darwin
+PATH=$PATH:/Applications/Utilities/XQuartz.app/Contents/MacOS:/Applications/Dia.app/Contents/Resources/bin
+# LOCAL #
+#
 export PATH
 
 # LOCAL #
