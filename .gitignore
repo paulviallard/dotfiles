@@ -1,2 +1,3 @@
-*prompt/autosuggestions
-*prompt/highlighting
+.DS_Store
+bash/bash_local_config
+term/
