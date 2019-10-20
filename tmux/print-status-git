@@ -1,0 +1,206 @@
+#!/usr/bin/env python3
+# Copyright © 2019 Paul Viallard <paul.viallard@gmail.com>
+# This work is free. You can redistribute it and/or modify it under the
+# terms of the Do What The Fuck You Want To Public License, Version 2,
+# as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
+
+from sys import exit
+from subprocess import check_output, DEVNULL
+from os.path import abspath, isdir
+from argparse import ArgumentParser
+from re import search
+
+# We set the color for the printing
+COLOR_DEFAULT_STRING = "#[fg=white]"
+COLOR_BRANCH_STRING = "#[fg=colour12 bold]"
+COLOR_STATUS_STRING = "#[fg=colour12 bold]"
+COLOR_STATUS_SIZE_STRING = "#[fg=white bold]"
+COLOR_SEPARATOR_STRING = "#[fg=white]"
+
+# We set the separator
+SEPARATOR = "-"
+
+# We initialize the sybol for the status
+GIT_STATUS_SYMBOL_DICT = {
+    "ahead": "⇑", "behind": "⇓",
+    "untracked": "*", "updated": "+",
+    "diverged": "!", "staged": "",
+    "not_updated": "x"
+}
+
+# We initialize the correspondance between the codes
+# and the home-made status (check man git-status)
+GIT_CODE_DICT = {
+    " M": ["not_updated"], " D": ["not_updated"],
+    #  -------------------------------------------------
+    "A ": ["updated"], "AM": ["updated"],
+    "AD": ["updated"],
+    #  -------------------------------------------------
+    "DD": ["diverged"], "AU": ["diverged"],
+    "UD": ["diverged"], "UA": ["diverged"],
+    "DU": ["diverged"], "AA": ["diverged"],
+    "UU": ["diverged"],
+    #  -------------------------------------------------
+    "??": ["untracked"],
+    "!!": []
+}
+
+# We initialize the status
+git_status_dict = {
+    "untracked": [], "updated": [],
+    "diverged": [], "staged": [],
+    "not_updated": []
+}
+
+#  We create the parser
+arg_parser = ArgumentParser(
+    description="print (for tmux) the git status of the working directory"
+)
+arg_parser.add_argument(
+    "pwd", metavar="pwd", type=str,
+    help="current working directory"
+)
+arg_list = arg_parser.parse_args()
+
+#  We get the path of the directory
+git_pwd = arg_list.pwd
+
+#  We check that the argument is a path
+if(not(isdir(git_pwd))):
+    arg_parser.error("pwd must be a directory")
+
+#  We create an absolute path
+git_pwd = abspath(git_pwd)
+
+#  We launch the git status command and we parse it
+git_output = check_output(
+    "git status --porcelain=v1 --branch; exit 0",
+    shell=True, stderr=DEVNULL, cwd=git_pwd
+)
+git_output = git_output.decode("utf-8")
+git_output_list = git_output.split("\n")
+git_output_list = [
+    git_output for git_output in git_output_list if git_output != ""
+]
+
+#  If there is no output, there is no git directory
+if(len(git_output_list) == 0):
+    exit(0)
+
+#  We get the branch information and
+#  if it is behind or ahead the remote branch
+git_info = git_output_list.pop(0)
+git_info = git_info[3:]
+git_info = git_info.split("...")
+git_branch_info = git_info[0]
+
+#  We get the number of commits
+#  behind and ahead
+git_behind = 0
+git_ahead = 0
+
+#  If we have the "..." in the message
+#  we can have the ahead and behind information
+if(len(git_info) == 2):
+
+    #  We get the behind/ahead message
+    git_rest_info = git_info[1]
+
+    #  We search for the behind message
+    git_behind = search(r"behind (\d+)", git_rest_info)
+    if(git_behind is not None):
+        git_behind = int(git_behind.group(1))
+    else:
+        git_behind = 0
+
+    #  We search for the ahead message
+    git_ahead = search(r"ahead (\d+)", git_rest_info)
+    if(git_ahead is not None):
+        git_ahead = int(git_ahead.group(1))
+    else:
+        git_ahead = 0
+
+#  We initialize the splits of the branch information
+#  to get the branch name
+git_no_commit_info = git_branch_info.split("No commits yet on ")
+git_detached_info = git_branch_info.split("no branch")
+git_commit_info = git_branch_info
+
+#  If we have a "no commits" message, the next word will be the name
+if(len(git_no_commit_info) == 2):
+    git_branch = git_no_commit_info[1]
+#  Otherwise, we can have a detached branch,
+#  hence we get the hash or the tag
+elif(len(git_detached_info) == 2):
+    #  We get the tag of the current commit
+    git_tag_output = check_output(
+        "git name-rev --name-only --tags $(git rev-parse HEAD); exit 0",
+        shell=True, stderr=DEVNULL, cwd=git_pwd
+    )
+    git_tag = git_tag_output.decode("utf-8")
+    git_tag = git_tag.split("\n")[0]
+
+    #  We get the (short) hash of the current commit
+    git_hash_output = check_output(
+        "git rev-parse --short HEAD; exit 0",
+        shell=True, stderr=DEVNULL, cwd=git_pwd
+    )
+    git_hash = git_hash_output.decode("utf-8")
+    git_hash = git_hash.split("\n")[0]
+
+    #  We get the hash of the tag if it exists
+    #  as branch name
+    if(git_tag != "undefined"):
+        git_branch = git_tag
+    else:
+        git_branch = git_hash
+# Otherwise, we have the name of the branch
+else:
+    git_branch = git_commit_info
+
+# For any output line,
+for git_output in git_output_list:
+    # We get the code of the line
+    git_code = git_output[0:2]
+    # and the path of the file
+    git_file = git_output[3:]
+
+    # if the code is available in the list,
+    # we add the path in the status
+    if git_code in GIT_CODE_DICT:
+        for git_status in GIT_CODE_DICT[git_code]:
+            git_status_dict[git_status].append(git_file)
+
+# We count the number of paths to print
+for git_key, git_value in git_status_dict.items():
+    git_status_dict[git_key] = len(git_value)
+
+# We print the branch information
+git_branch += " "
+if(git_ahead != 0):
+    git_branch += COLOR_STATUS_STRING+GIT_STATUS_SYMBOL_DICT["ahead"]
+    git_branch += COLOR_STATUS_SIZE_STRING+str(git_ahead)
+    git_branch += COLOR_DEFAULT_STRING+" "
+if(git_behind != 0):
+    git_branch += COLOR_STATUS_STRING+GIT_STATUS_SYMBOL_DICT["behind"]
+    git_branch += COLOR_STATUS_SIZE_STRING+str(git_behind)
+    git_branch += COLOR_DEFAULT_STRING+" "
+git_branch = COLOR_BRANCH_STRING+git_branch[:-1]+COLOR_DEFAULT_STRING
+
+git_string = COLOR_SEPARATOR_STRING+" "+SEPARATOR+" "+COLOR_DEFAULT_STRING
+
+# We print the working directory information
+git_status_bool = False
+for git_status, git_status_size in git_status_dict.items():
+    if(git_status != "ahead" and git_status != "behind"
+       and git_status_size > 0):
+        git_string += COLOR_STATUS_STRING+GIT_STATUS_SYMBOL_DICT[git_status]
+        git_string += COLOR_STATUS_SIZE_STRING+str(git_status_size)+" "
+        git_string += COLOR_DEFAULT_STRING
+        git_status_bool = True
+git_string = git_string[:-1]
+
+# We print the git information
+print(git_branch, end="")
+if(git_status_bool):
+    print(git_string)
