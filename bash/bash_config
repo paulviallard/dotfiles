@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Copyright © 2019 Paul Viallard <paul.viallard@gmail.com>
+# This work is free. You can redistribute it and/or modify it under the
+# terms of the Do What The Fuck You Want To Public License, Version 2,
+# as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
+
+source ~/.dotfiles/bash/bash_local_config
+
+export EDITOR="vim"
+export MANPAGER="vim -M +MANPAGER -"
+
+export LANGUAGE="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="UTF-8"
+export LANG="en_US.UTF-8"
+
+alias grep="grep --color=auto"
+alias egrep="egrep --color=auto"
+alias fgrep="fgrep --color=auto"
+
+case "$(uname)" in
+  Linux) alias ls="ls --color=auto";;
+  Darwin) alias ls="ls -G";;
+  *) ;;
+esac
+
+PATH=.:~/.dotfiles/bin/:$LOCAL_PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
+export PATH
