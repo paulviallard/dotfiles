@@ -4,21 +4,21 @@
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 
+function handle_prompt_command() {
+  if [ "$TMUX" != "" ] && [ "$(command -v tmux)" != "" ]; then
+    tmux refresh-client -S;
+  fi
+}
 
 # We test if it is a interactive shell
 if [ -n "$PS1" ]; then
-
   export PS1='\[$(tput sgr0; tput bold)\]>\[$(tput sgr0)\] '
-
-  source ~/.dotfiles/bash/bash_config
+  if [ -f "~/.dotfiles/bash/bash_config" ]; then
+    source ~/.dotfiles/bash/bash_config
+  fi
 
   # We refresh the tmux status bar before printing the prompt
-  export PROMPT_COMMAND=handle_prompt_command 
-  function handle_prompt_command() {
-    if [ "$TMUX" != "" ] && [ "$(command -v tmux)" != "" ]; then
-      tmux refresh-client -S;
-    fi
-  }
+  export PROMPT_COMMAND=handle_prompt_command
 
   # We launch tmux if the program exists and if it's not already launched
   if [ "$TMUX" = "" ] && [ "$(command -v tmux)" != "" ]; then exec tmux; fi
