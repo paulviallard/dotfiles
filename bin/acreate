@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+# Copyright © 2021 Paul Viallard <paul.viallard@gmail.com>
+# This work is free. You can redistribute it and/or modify it under the
+# terms of the Do What The Fuck You Want To Public License, Version 2,
+# as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
+
+from argparse import ArgumentParser
+from os.path import exists, join
+from os import makedirs
+
+###############################################################################
+
+if __name__ == "__main__":
+    ARCHIVE_BIN = {
+        "year": b"\x00",
+        "date": b"\x01",
+        "datetime": b"\x02",
+        "year-date": b"\x03",
+        "year-datetime": b"\x04"
+    }
+
+###############################################################################
+
+
+def main():
+
+    # We create the parser
+    arg_parser = ArgumentParser(description="create an archive directory")
+    arg_parser.add_argument(
+        "path", metavar="path", type=str,
+        help="path of the archive directory"
+    )
+    arg_parser.add_argument(
+        "type", metavar="type", type=str,
+        help=("type of the archive "
+              + "(year, date, datetime, year-date, year-datetime)")
+    )
+    arg_list = arg_parser.parse_args()
+
+    path = arg_list.path
+    archive_type = arg_list.type
+    if(archive_type != "year"
+       and archive_type != "date"
+       and archive_type != "datetime"
+       and archive_type != "year-date"
+       and archive_type != "year-datetime"
+       ):
+        arg_parser.error(
+            "type must be either year, date, datetime, "
+            + "year-date or year-datetime")
+
+    if(not(exists(path))):
+        makedirs(path)
+
+    archive_path = join(path, ".archive")
+    f = open(archive_path, 'wb+')
+    f.write(ARCHIVE_BIN[archive_type])
+    f.close()
+
+
+if __name__ == "__main__":
+    main()
