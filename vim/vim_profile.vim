@@ -19,6 +19,9 @@ set nu
 " We remove the swap files
 set noswapfile
 
+" We don't hide the mouse (in gvim)
+set nomousehide
+
 " Tab rule
 set tabstop=2
 set shiftwidth=2
