@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+import time
+import tkinter as tk
+import datetime
+from threading import Thread
+
+
+###############################################################################
+
+class AppUpdate(Thread):
+    def __init__(self, fun):
+        super().__init__()
+        self.fun = fun
+
+    def run(self):
+        return self.fun()
+
+# --------------------------------------------------------------------------- #
+
+
+class App(tk.Tk):
+
+    def __init__(self):
+        super().__init__()
+
+        self.stopped = False
+        self.title("Clock")
+        self.geometry('450x100')
+
+        self.frame = tk.Frame(self, width=800, height=200)
+        self.frame.grid(row=0, column=0, sticky="NW")
+
+        self.time = tk.Label(text=self.get_time(), font='Arial 100 bold')
+        self.time.place(relx=0.5, rely=0.5, anchor="center")
+
+        def update():
+            while(not(self.stopped)):
+                try:
+                    time.sleep(0.1)
+                    self.time["text"] = self.get_time()
+                except RuntimeError:
+                    pass
+                except tk.TclError:
+                    pass
+        self.update = AppUpdate(update)
+        self.update.start()
+
+        def closing():
+            self.stopped = True
+            self.destroy()
+        self.protocol("WM_DELETE_WINDOW", closing)
+
+    def get_time(self):
+        t = datetime.datetime.now()
+        return t.strftime("%H:%M:%S")
+
+###############################################################################
+
+
+if __name__ == "__main__":
+    app = App().mainloop()
