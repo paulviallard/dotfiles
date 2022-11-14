@@ -1,3 +1,4 @@
 .DS_Store
 bash/bash_local_config
 term/
+bin/__pycache__/
