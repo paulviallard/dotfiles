@@ -1,46 +1,43 @@
 #!/usr/bin/env python3
-# Copyright © 2021 Paul Viallard <paul.viallard@gmail.com>
+# Copyright © 2022 Paul Viallard <paul.viallard@gmail.com>
 # This work is free. You can redistribute it and/or modify it under the
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 
-from os import listdir, stat, makedirs
-from os.path import exists, isdir, isfile, join, split
+from os import listdir, stat, makedirs, getcwd
+from os.path import exists, isdir, isfile, join, dirname
 from datetime import datetime
 from argparse import ArgumentParser
 from shutil import move
+from importlib.machinery import SourceFileLoader
+from importlib.util import spec_from_loader, module_from_spec
 
 ###############################################################################
 
-if __name__ == "__main__":
-    ARCHIVE_BIN = {
-        b"\x00": "year",
-        b"\x01": "date",
-        b"\x02": "datetime",
-        b"\x03": "year-date",
-        b"\x04": "year-datetime"
-    }
+ARCHIVE_BIN = {
+    b"\x00": "year",
+    b"\x01": "date",
+    b"\x02": "time",
+    b"\x03": "-",
+    b"\x04": "/",
+    b"\x05": "dir",
+    b"\x06": "",
+}
 
-    # We create the parser
-    arg_parser = ArgumentParser(
-        description="move the source files in the archive")
-    arg_parser.add_argument(
-        "source", metavar="source", type=str,
-        help="path of the source directory"
-    )
-    arg_parser.add_argument(
-        "archive", metavar="archive", type=str,
-        help="path of the archive directory"
-    )
+# Import the amkdir function
+loader = SourceFileLoader("amkdir", join(dirname(__file__), "amkdir"))
+spec = spec_from_loader("amkdir", loader)
+amkdir = module_from_spec(spec)
+loader.exec_module(amkdir)
+get_archive_type = amkdir.get_archive_type
+is_archive_dir = amkdir.is_archive_dir
 
 ###############################################################################
 
 
-def move_file_archive(
-    file_path, archive_path, archive_type
-):
+def move_file_archive(file_path, archive_path, archive_type):
 
-    # We
+    # We get the time of the file creation
     time = stat(file_path).st_mtime
     date = datetime.fromtimestamp(time)
     year = "{}".format(date.year)
@@ -49,43 +46,44 @@ def move_file_archive(
     h = "{:02d}".format(date.hour)
     min = "{:02d}".format(date.minute)
 
-    _, file_name = split(file_path)
+    # We get the path from the .archive file
+    dir_path = ""
+    for c in archive_type:
+        if(c == "year"):
+            dir_path += year
+        elif(c == "date"):
+            dir_path += month+"-"+day
+        elif(c == "time"):
+            dir_path += h+"-"+min
+        elif(c == "dir"):
+            dir_path = dir_path[:-1]
+        else:
+            dir_path += c
+    path = join(archive_path, dir_path)
 
-    if(archive_type == "year"):
-        file_archive_path = join(
-            archive_path, year+"/"+file_name)
-    elif(archive_type == "date"):
-        file_archive_path = join(
-            archive_path, year+"-"+month+"-"+day+"/"+file_name)
-    elif(archive_type == "datetime"):
-        file_archive_path = join(
-            archive_path, year+"-"+month+"-"+day+"-"+h+"-"+min+"/"+file_name)
-    elif(archive_type == "year-date"):
-        file_archive_path = join(
-            archive_path, year+"/"+year+"-"+month+"-"+day+"/"+file_name)
-    elif(archive_type == "year-datetime"):
-        file_archive_path = join(
-            archive_path, (
-                year+"/"+year+"-"+month+"-"+day+"-"+h+"-"+min+"/"+file_name))
-    else:
-        arg_parser.error("type must be either year, date or datetime")
-
-    dir_name, _ = split(file_archive_path)
-    makedirs(dir_name, exist_ok=True)
-    move(file_path, file_archive_path)
-    #  rename(file_path, file_archive_path)
+    # We create the directories and move the file
+    makedirs(path, exist_ok=True)
+    move(file_path, path)
 
 
 def list_file_dir(path):
+
+    # We create the file list
     file_list = []
 
+    # For each file/directories in the path
     for file_dir in listdir(path):
         file_dir_path = join(path, file_dir)
         file_bool, dir_bool = is_file_dir(file_dir_path)
 
+        # If the path correspond to a file
         if(file_bool):
+            # We append to the list
             file_list.append(file_dir_path)
+
+        # If the path correspond to a directory
         elif(dir_bool):
+            # We append concatenate the list of the directory
             file_list += list_file_dir(file_dir_path)
 
     return file_list
@@ -101,35 +99,22 @@ def is_file_dir(path):
         return False, True
     return False, False
 
-
-def get_archive_type(path):
-    archive_path = join(path, ".archive")
-    f = open(archive_path, 'rb')
-    c = f.read(1)
-    if(c not in ARCHIVE_BIN):
-        arg_parser.error(".archive is corrupted")
-    f.close()
-    return ARCHIVE_BIN[c]
-
 ###############################################################################
 
 
-def main():
-
-    arg_list = arg_parser.parse_args()
-
-    source_path = arg_list.source
-    archive_path = arg_list.archive
+def asort(source_path, archive_path):
 
     file_source_bool, dir_source_bool = is_file_dir(source_path)
-    file_archive_bool, dir_archive_bool = is_file_dir(archive_path)
+    archive_path = join(getcwd(), archive_path)
 
-    if(not(dir_archive_bool)):
-        arg_parser.error(archive_path+" is not an archive")
+    # We test if the directory correspond to an archive
+    if(not(is_archive_dir(archive_path))):
+        arg_parser.error(f"{archive_path} must be an archive")
 
-    # We get the type of the archive (year, date or datetime)
+    # We get the type of the archive
     archive_type = get_archive_type(archive_path)
 
+    # We move the files
     if(file_source_bool):
         move_file_archive(source_path, archive_path, archive_type)
     elif(dir_source_bool):
@@ -137,8 +122,26 @@ def main():
         for source_path in source_path_list:
             move_file_archive(source_path, archive_path, archive_type)
     else:
-        arg_parser.error(source_path+" must be a file or a directory")
+        arg_parser.error(f"{source_path} must be a file or a directory")
+
+###############################################################################
 
 
 if __name__ == "__main__":
-    main()
+
+    # We create the parser
+    arg_parser = ArgumentParser(
+        description="move the source files in the archive")
+    arg_parser.add_argument(
+        "source", metavar="source", type=str,
+        help="path of the source directory"
+    )
+    arg_parser.add_argument(
+        "archive", metavar="archive", type=str,
+        help="path of the archive directory"
+    )
+    arg_list = arg_parser.parse_args()
+
+    source_path = arg_list.source
+    archive_path = arg_list.archive
+    asort(source_path, archive_path)

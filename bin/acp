@@ -1,55 +1,75 @@
 #!/usr/bin/env python3
-# Copyright © 2019 Paul Viallard <paul.viallard@gmail.com>
+# Copyright © 2022 Paul Viallard <paul.viallard@gmail.com>
 # This work is free. You can redistribute it and/or modify it under the
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 
 from distutils.dir_util import copy_tree
 from os import getcwd
-from os.path import join, basename
-from datetime import datetime
+from os.path import join, dirname
 from argparse import ArgumentParser
+from importlib.machinery import SourceFileLoader
+from importlib.util import spec_from_loader, module_from_spec
+
+###############################################################################
+
+ARCHIVE_BIN = {
+    b"\x00": "year",
+    b"\x01": "date",
+    b"\x02": "time",
+    b"\x03": "-",
+    b"\x04": "/",
+    b"\x05": "dir",
+    b"\x06": "",
+}
+
+# Import the amkdir function
+loader = SourceFileLoader("amkdir", join(dirname(__file__), "amkdir"))
+spec = spec_from_loader("amkdir", loader)
+amkdir = module_from_spec(spec)
+loader.exec_module(amkdir)
+amkdir = amkdir.amkdir
+
+###############################################################################
 
 
-# We create the parser
-arg_parser = ArgumentParser(description='copy an archive directory')
-arg_parser.add_argument(
-    "source_path", metavar="source_path", type=str,
-    help="source path of the directory to copy"
-)
-arg_parser.add_argument(
-    "target_path", metavar="target_path", type=str,
-    help="target path of the directory"
-)
-arg_list = arg_parser.parse_args()
+def acp(dir_source_path, dir_target_path):
 
-# We get the current working directory
-current_path = getcwd()
+    # We get the path of the source directory
+    dir_source_path = join(getcwd(), dir_source_path)
 
-# We get the path of the source directory
-dir_source_path = arg_list.source_path
-dir_source_path = join(current_path, dir_source_path)
+    # We get the path of the target directory
+    dir_target_path = join(getcwd(), dir_target_path)
 
-# We get the path of the target directory
-dir_target_path = arg_list.target_path
-dir_target_path = join(current_path, dir_target_path)
+    # We create the directory
+    dir_target_path = amkdir([dir_target_path])[0]
 
-# We get the file and the folder name for the target directory
-dir_target_name = basename(dir_target_path)
-dir_target_path = dir_target_path[:-len(dir_target_name)]
+    # We copy the directory
+    copy_tree(
+        dir_source_path, dir_target_path,
+        preserve_mode=1, preserve_times=1, preserve_symlinks=1
+    )
 
-# We get the current date and we create the date name
-current_date = datetime.now()
-date_name = current_date.strftime("%Y-%m-%d-%H-%M")
+    return dir_target_path
 
-# and we add it to the directory name
-dir_target_name = date_name+"-"+dir_target_name
+###############################################################################
 
-# We add the path
-dir_target_path += dir_target_name
 
-# and we create the directory
-copy_tree(
-    dir_source_path, dir_target_path,
-    preserve_mode=1, preserve_times=1, preserve_symlinks=1
-)
+if __name__ == "__main__":
+
+    # We create the parser
+    arg_parser = ArgumentParser(description='copy an archive directory')
+    arg_parser.add_argument(
+        "source_path", metavar="source_path", type=str,
+        help="source path of the directory to copy"
+    )
+    arg_parser.add_argument(
+        "target_path", metavar="target_path", type=str,
+        help="target path of the directory"
+    )
+    arg_list = arg_parser.parse_args()
+
+    dir_source_path = arg_list.source_path
+    dir_target_path = arg_list.target_path
+
+    acp(dir_source_path, dir_target_path)

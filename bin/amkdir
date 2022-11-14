@@ -1,40 +1,137 @@
 #!/usr/bin/env python3
-# Copyright © 2019 Paul Viallard <paul.viallard@gmail.com>
+# Copyright © 2022 Paul Viallard <paul.viallard@gmail.com>
 # This work is free. You can redistribute it and/or modify it under the
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 
-from os import getcwd, mkdir
-from os.path import join, basename
+from os import getcwd, makedirs
+from os.path import join, basename, dirname, exists, abspath
 from datetime import datetime
 from argparse import ArgumentParser
+from re import fullmatch, MULTILINE
+
+###############################################################################
+
+ARCHIVE_BIN = {
+    b"\x00": "year",
+    b"\x01": "date",
+    b"\x02": "time",
+    b"\x03": "-",
+    b"\x04": "/",
+    b"\x05": "dir",
+    b"\x06": "",
+}
+
+###############################################################################
 
 
-# We create the parser
-arg_parser = ArgumentParser(description="create an archive directory")
-arg_parser.add_argument(
-    "path", metavar="path", type=str,
-    help="path of the directory"
-)
-arg_list = arg_parser.parse_args()
+def get_archive_type(path):
 
-# We get the path of the directory
-dir_path = arg_list.path
-current_path = getcwd()
-dir_path = join(current_path, dir_path)
+    # We open the .archive file
+    archive_path = join(path, ".archive")
+    f = open(archive_path, 'rb')
 
-# We get the file and the folder name
-dir_name = basename(dir_path)
-dir_path = dir_path[:-len(dir_name)]
+    # We read the file
+    archive_type = []
+    c = f.read(1)
 
-# We get the current date and we create the date name
-current_date = datetime.now()
-date_name = current_date.strftime("%Y-%m-%d-%H-%M")
+    # We read each byte of the file
+    while(c != b"\x06"):
 
-# and we add it to the directory name
-dir_name = date_name+"-"+dir_name
+        # If the read byte is not in the defined: the file is corrupted
+        if(c not in ARCHIVE_BIN):
+            f.close()
+            arg_parser.error(".archive is corrupted")
 
-# We add the path
-dir_path += dir_name
-# and we create the directory
-mkdir(dir_path)
+        archive_type.append(ARCHIVE_BIN[c])
+        c = f.read(1)
+    f.close()
+
+    # We check if the type is correct
+    archive_type_ = "".join(archive_type)
+    if(not(fullmatch(
+        r"(((year)|(date)|(time))[-\/])*dir", archive_type_, MULTILINE)
+    )):
+        arg_parser.error(".archive is corrupted")
+
+    return archive_type
+
+
+def is_archive_dir(path):
+    # We test if the .archive file exists
+    return exists(join(path, ".archive"))
+
+###############################################################################
+
+
+def amkdir(dir_path_list):
+
+    if(len(dir_path_list) == 0):
+        dir_path_list.append(getcwd())
+
+    path_list = []
+
+    # For each directory to create
+    for dir_path in dir_path_list:
+
+        dir_path = abspath(dir_path)
+
+        # We get the archive directory and the name of the file
+        dir_name = ""
+        archive_path = dir_path
+        while(not(exists(archive_path))):
+            dir_name = join(basename(archive_path), dir_name)
+            archive_path = dirname(archive_path)
+
+        # We check if the directory is an archive
+        if(not(is_archive_dir(archive_path))):
+            arg_parser.error(f"{archive_path} must be an archive")
+
+        # We get the type of the archive (year, date or datetime)
+        archive_type = get_archive_type(archive_path)
+
+        # We get the current date and we create the date name
+        current_date = datetime.now()
+
+        # We create the path
+        year = current_date.strftime("%Y")
+        date = current_date.strftime("%m-%d")
+        time = current_date.strftime("%H-%M")
+
+        dir_path = ""
+        for c in archive_type:
+            if(c == "year"):
+                dir_path += year
+            elif(c == "date"):
+                dir_path += date
+            elif(c == "time"):
+                dir_path += time
+            elif(c == "dir"):
+                if(dir_name != ""):
+                    dir_path += dir_name
+                else:
+                    dir_path = dir_path[:-1]
+            else:
+                dir_path += c
+
+        path = join(archive_path, dir_path)
+        path_list.append(path)
+
+        # We create the directory
+        makedirs(path, exist_ok=True)
+
+    return path_list
+
+###############################################################################
+
+
+if __name__ == "__main__":
+
+    # We create the parser
+    arg_parser = ArgumentParser(description="create an archive directory")
+    arg_parser.add_argument(
+        "path", metavar="path", type=str, nargs="*",
+        help="path of the directory")
+    arg_list = arg_parser.parse_args()
+
+    amkdir(arg_list.path)
