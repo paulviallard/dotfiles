@@ -155,59 +155,34 @@ let g:NERDCommentEmptyLines = 1
 let g:NERDTrimTrailingWhitespace = 1
 
 " We bind the comment command
-inoremap <C-t> <ESC>:call NERDComment(0, 'toggle')<CR>
-nnoremap <C-t> :call NERDComment(1, 'toggle')<CR>
-vnoremap <C-t> :call NERDComment(0, 'toggle')<CR>
+inoremap <C-t> <ESC>:call nerdcommenter#Comment(0, 'toggle')<CR>
+nnoremap <C-t> :call nerdcommenter#Comment(1, 'toggle')<CR>
+vnoremap <C-t> :call nerdcommenter#Comment(0, 'toggle')<CR>
 
 " --------------------------------------------- "
-"                   LaTeX Plugins               "
+"                       LaTeX                   "
 " --------------------------------------------- "
 
-" ----------------- Vim-Latex ----------------- "
-
-" We disable the folded codes
-let g:Tex_FoldedSections = ""
-let g:Tex_FoldedEnvironments = ""
-let g:Tex_FoldedMisc = ""
-" We disable the vim-latex mappings
-let g:Imap_UsePlaceHolders = 0
-" We disable the jump to the error after the compilation
-let g:Tex_GotoError = 0
-" We disable the print of the error
-let g:Tex_ShowErrorContext = 0
-" We set the default output format
-let g:Tex_DefaultTargetFormat = 'pdf'
-" We customize the compilation command
-let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode -file-line-error-style $*'
-" We launch the following function on startup
-autocmd VimEnter * call ManageVimLatexEnter()
-function ManageVimLatexEnter()
-  " If the file is a TeX file,
-  if &filetype == "tex"
-    " we bind the compilation command
-    nnoremap <C-r> :silent! call Tex_RunLaTeX()<CR> 
-    inoremap <C-r> <Esc>:silent! call Tex_RunLaTeX()<CR><Home>i
-    vnoremap <C-r> <Esc>:silent! call Tex_RunLaTeX()<CR>
-  endif
-endfunction
-
-" ------------- vim-latex-preview ------------- "
-
-" We set the update time to 100ms 
-autocmd Filetype tex setl updatetime=100
-" We prevent to recompile the TeX file on the cursor hold
-let g:livepreview_cursorhold_recompile = 0
 " We launch the following function on startup
 autocmd VimEnter * call ManageVimLatexPreviewEnter()
+
+function CompilePreviewLatex()
+  " We compile the file
+  :!latexmk -pdf %
+  " and we open the new pdf
+  :let @r = substitute(expand('%:t'), '\.tex$', '.pdf', '')
+  :execute '!open ' . @r
+endfunction
+
 function ManageVimLatexPreviewEnter()
   " If the file is a TeX file,
   if &filetype == "tex"
     " we launch the preview
-    :LLPStartPreview
-    " and we bind the preview command 
-    nnoremap <C-p> :LLPStartPreview<CR>
-    inoremap <C-p> <Esc>:LLPStartPreview <CR><Home>i
-    vnoremap <C-p> <Esc>:LLPStartPreview<CR>
+    :call CompilePreviewLatex()
+    " and we bind the preview command
+    nnoremap <C-p> :call CompilePreviewLatex()<CR>
+    inoremap <C-p> <Esc>:call CompilePreviewLatex()<CR><Home>i
+    vnoremap <C-p> <Esc>:call CompilePreviewLatex()<CR>
   endif
 endfunction
 
