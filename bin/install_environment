@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright © 2019 Paul Viallard <paul.viallard@gmail.com>
+# Copyright © 2023 Paul Viallard <paul.viallard@gmail.com>
 # This work is free. You can redistribute it and/or modify it under the
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
@@ -9,6 +9,7 @@ VIM_ENVIRONMENT=$HOME/.vim
 
 # We install the shell
 rm -rf $HOME/.bashrc
+rm -rf $HOME/.bash_profile
 ln $ENVIRONMENT/bash/bash_profile $HOME/.bash_profile
 ln $ENVIRONMENT/bash/bash_profile $HOME/.bashrc
 
@@ -17,8 +18,6 @@ rm -rf $HOME/.tmux.conf
 ln $ENVIRONMENT/tmux/tmux.conf $HOME/.tmux.conf
 rm -rf $HOME/.gitconfig
 ln $ENVIRONMENT/git/gitconfig $HOME/.gitconfig
-rm -rf $HOME/.xonshrc
-ln $ENVIRONMENT/xonsh/xonsh_profile $HOME/.xonshrc
 
 # We install vim
 rm -rf $HOME/.vimrc
@@ -30,11 +29,9 @@ ln $ENVIRONMENT/vim/vim_color.vim $VIM_ENVIRONMENT/colors/paulviallard.vim
 # We install the plugins for vim
 mkdir -p $VIM_ENVIRONMENT/autoload $VIM_ENVIRONMENT/bundle && \
 curl -LSso $VIM_ENVIRONMENT/autoload/pathogen.vim https://tpo.pe/pathogen.vim
-git clone https://github.com/scrooloose/nerdtree.git $VIM_ENVIRONMENT/bundle/nerdtree
-git clone https://github.com/scrooloose/nerdcommenter.git $VIM_ENVIRONMENT/bundle/nerdcommenter
-git clone https://github.com/vim-latex/vim-latex.git  $VIM_ENVIRONMENT/bundle/vim-latex
-git clone https://github.com/xuhdev/vim-latex-live-preview.git $VIM_ENVIRONMENT/bundle/vim-latex-live-preview
-git clone --recursive https://github.com/python-mode/python-mode $VIM_ENVIRONMENT/bundle/python-mode
+git clone https://github.com/preservim/nerdtree.git $VIM_ENVIRONMENT/bundle/nerdtree
+git clone https://github.com/preservim/nerdcommenter.git $VIM_ENVIRONMENT/bundle/nerdcommenter
+git clone --recurse-submodules https://github.com/python-mode/python-mode $VIM_ENVIRONMENT/bundle/python-mode
 
 # We source the bash configuration file
 source $HOME/.bashrc
