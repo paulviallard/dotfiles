@@ -4,6 +4,9 @@
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
 
+# We remove the warning "The default interactive shell is now zsh." on MacOS
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 function handle_prompt_command() {
   if [ "$TMUX" != "" ] && [ "$(command -v tmux)" != "" ]; then
     tmux refresh-client -S;
