@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+import os
+import subprocess
+from argparse import ArgumentParser
+
+
+def extract(archive_path, full=False):
+    archive_description = str(subprocess.check_output(["file", archive_path]))
+
+    archive_directory_path = os.path.dirname(os.path.realpath(archive_path))
+    current_path = os.getcwd()
+    os.chdir(archive_directory_path)
+    archive_path = os.path.basename(archive_path)
+    extracted = True
+    if(archive_description.find(archive_path+": RAR") != -1):
+        if(not(full)):
+            os.system("unrar e -o+ "+archive_path)
+        else:
+            os.system("unrar x -o+ "+archive_path)
+    elif(archive_description.find(archive_path+": gzip") != -1
+         or archive_description.find(archive_path+": XZ") != -1
+         or archive_description.find(archive_path+": POSIX tar") != -1):
+        if(not(full)):
+            os.system("tar -vxf "+archive_path+" --strip-components=1")
+        else:
+            os.system("tar -vxf "+archive_path)
+    elif(archive_description.find(archive_path+": Zip") != -1):
+        if(not(full)):
+            os.system("unzip -j -o "+archive_path)
+        else:
+            os.system("unzip -o "+archive_path)
+    else:
+        extracted = False
+
+    os.chdir(current_path)
+    return extracted
+
+
+def main():
+    arg_parser = ArgumentParser(description='extract an archive')
+    arg_parser.add_argument(
+        "archive_path", metavar="archive_path", type=str,
+        help="archive path"
+    )
+    arg_parser.add_argument(
+        "-f", action="store_true",
+        help="extract full archive (with the extra directory)"
+    )
+    arg_list = arg_parser.parse_args()
+
+    archive_path = arg_list.archive_path
+    full = arg_list.f
+    if(not(extract(archive_path, full=full))):
+        arg_parser.error(archive_path+" is not an archive")
+
+
+if __name__ == "__main__":
+    main()
