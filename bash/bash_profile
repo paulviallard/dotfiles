@@ -13,7 +13,8 @@ function handle_prompt_command() {
 # We test if it is a interactive shell
 if [ -n "$PS1" ]; then
   export PS1='\[$(tput sgr0; tput bold)\]>\[$(tput sgr0)\] '
-  if [ -f "~/.dotfiles/bash/bash_config" ]; then
+  
+  if [ -r ~/.dotfiles/bash/bash_config ]; then
     source ~/.dotfiles/bash/bash_config
   fi
 
@@ -22,13 +23,5 @@ if [ -n "$PS1" ]; then
 
   # We launch tmux if the program exists and if it's not already launched
   if [ "$TMUX" = "" ] && [ "$(command -v tmux)" != "" ]; then exec tmux; fi
-
-  # We launch xonsh if the shell exists
-  if [ "$CURRENT_SHELL" == "" ]; then 
-    export CURRENT_SHELL="bash"; 
-  fi
-  if [ "$(command -v xonsh)" != "" ] && [ "$CURRENT_SHELL" == "bash" ]; then 
-    export CURRENT_SHELL="xonsh"; exec xonsh;
-  fi
 
 fi
