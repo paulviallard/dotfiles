@@ -1,9 +1,9 @@
-This is my environment. I assume that there are _zsh_, _tmux_ and _vim_ installed.
+This is my environment. I assume that there are _bash_, _tmux_ and _vim_ installed.
 
 # Installation
 ```zsh
-git clone https://github.com/paulviallard/environment.git $HOME/.shell
-$HOME/.shell/scripts/install_environment
+git clone https://github.com/paulviallard/dotfiles.git $HOME/.dotfiles
+$HOME/.dotfiles/bin/install_environment
 ```
 
 # Colors 
