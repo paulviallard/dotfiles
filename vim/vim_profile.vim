@@ -187,6 +187,39 @@ function ManageVimLatexPreviewEnter()
 endfunction
 
 " --------------------------------------------- "
+"                    Markdown                   "
+" --------------------------------------------- "
+
+" We launch the following function on startup
+autocmd VimEnter * call ManageVimMarkdownEnter()
+
+function ConvertMarkdownToHTML()
+  " We convert the markdown file to HTML
+  :!pandoc -f markdown -t html5 --template ~/.dotfiles/vim/markdown_template.html --metadata title="Markdown preview" -o %:r.html %
+endfunction
+
+function OpenMarkdownHTMLFile()
+  " Open the HTML file corresponding to the current Markdown file
+  execute '!open ' . expand('%:r') . '.html'
+endfunction
+
+function ManageVimMarkdownEnter()
+  " If the file is a Markdown file,
+  if &filetype == "markdown"
+    " we convert it to HTML
+    :call ConvertMarkdownToHTML()
+    " and we bind the HTML preview command
+    nnoremap <C-o> :call OpenMarkdownHTMLFile()<CR>
+    inoremap <C-o> <Esc>:call OpenMarkdownHTMLFile()<CR>
+    vnoremap <C-o> <Esc>:call OpenMarkdownHTMLFile()<CR>
+    " and we bind the pandoc command
+    nnoremap <C-p> :call ConvertMarkdownToHTML()<CR>
+    inoremap <C-p> <Esc>:call ConvertMarkdownToHTML()<CR>
+    vnoremap <C-p> <Esc>:call ConvertMarkdownToHTML()<CR>
+  endif
+endfunction
+
+" --------------------------------------------- "
 "         Python Plugin (python-mode)           "
 " --------------------------------------------- "
 
