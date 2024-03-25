@@ -195,7 +195,7 @@ autocmd VimEnter * call ManageVimMarkdownEnter()
 
 function ConvertMarkdownToHTML()
   " We convert the markdown file to HTML
-  :!pandoc -f markdown -t html5 --template ~/.dotfiles/vim/markdown_template.html --metadata title="Markdown preview" -o %:r.html %
+  :!pandoc -f markdown -t html5 --mathjax --template ~/.dotfiles/vim/markdown_template.html --metadata title="Markdown preview" -o %:r.html %
 endfunction
 
 function OpenMarkdownHTMLFile()
